@@ -1,0 +1,78 @@
+Создаст виртуальное окружение для текущей установленной версии python в директории venv	
+	>>> python -m venv venv
+	
+Перейдем в дирию .\venv\Scripts и запустим окружение
+	>>> cd venv\Scripts
+	>>> activate
+	
+Установим пакет Django
+	>>> python.exe -m pip install Django
+	
+Создать новый проект Django с именем mysite
+	>>>django-admin startproject mysite
+	
+Переходим в дирекрию с файлом manage.py и запускаем Django сервер
+	>>> cd C:\Users\admin\Documents\Programming\python\mysite_root
+	>>> python manage.py runserver
+	
+Установка пакета Django более старой версии
+	>>> pip install Django==<номер более ранней версии>
+	>>> pip install django==2.1
+	
+Создаем приложение с именем crm
+	>>> python manage.py startapp crm
+	
+Создадим (соберем) и выполним миграцию. 
+Миграция преобразует базу данных в соответствии с определением моделей.
+	>>> python manage.py makemigrations
+	
+Запускаем интерактивную консоль shell. Выполняем операцию миграции в ручную
+	>>> python manage.py shell
+	
+Выполняем python запросы для заполнения данных таблицы создданной с помощью
+миграции модели. Работа с Django ORM
+	Импортируем созданный ранее класс
+	>>> from crm.models import Order
+	Создадим экземпляр класса (модели)
+	>>>  n = Order(order_name="Ivan", order_phone="+79896312233")
+	Сохранение в БД созданного экземпляра класса
+	>>> n.save()
+	Просмотрим создданый SQL запрос.
+	Для этого импортируем модуль 
+	>>> from django.db import connection
+	Выведем запросы
+	>>> connection.queries
+	[{'sql': 'INSERT INTO "crm_order" ("order_dt", "order_name", "order_phone") VALUES (\'2022-06-18 12:07:08.837961\', \'Ivan\', \'+79896312233\')', 'time': '0.172'}]
+	Еще один способ добавить данные в таблицу. При использовании данного метода сохранять данные не нужно,
+	запись в БД происходит тут же. objects - диспечер записей БД
+	n3 = Order.objects.create(order_name="Anna", order_phone="+79998887766")
+
+Получим все запросы к БД
+	>>> Order.objects.all()
+
+Вывести только необходимые записи
+	>>> Order.objects.filter(order_name="Anna")
+	
+Отсортировать запросы по возрастанию, по определенному полю
+	>>> Order.objects.order_by('id')
+
+Отсортировать запросы по возрастанию, по определенному полю в обратном порядке
+	>>> Order.objects.order_by('-id')
+
+Получить определенную запись по privet key (в нашем случае id), может отдать только одну запсь.
+Поменять значение и сохранить.
+	>>> order1 = Order.objects.get(pk=1)
+	>>> order1.order_name
+	'Ivan'
+	>>> order1.order_name = "Ulya"
+	>>> order1.save()
+	
+Выход из shell 
+	>>> exit()
+	
+
+	
+
+	 
+	
+		 
