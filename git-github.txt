@@ -236,5 +236,3 @@ main (данное название основной ветки исполльз
 для глобального отключения добавьте опцию --global:
 # git config --global core.quotepath false
 
-
-
