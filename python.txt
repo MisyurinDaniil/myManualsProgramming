@@ -1,5 +1,8 @@
 Создаст виртуальное окружение для текущей установленной версии python в директории venv	
 	>>> python -m venv venv
+
+Создаем виртуальную среду для определенной версии python
+	C:\Users\admin\AppData\Local\Programs\Python\Python310\python.exe -m venv venv310	
 	
 Перейдем в дирию .\venv\Scripts и запустим окружение
 	>>> cd venv\Scripts
@@ -23,7 +26,8 @@
 	>>> python manage.py startapp crm
 
 ######################################
-########## Модель в Django ###########
+########## Модель в Django ###############
+######### Работа с админ панелью ###########
 ######################################	
 	
 Создадим модель нашего приложения crm. Отредактируем файл crm/models.py
@@ -61,6 +65,7 @@
 Выполним миграцию. 
 Миграция синхронизует структуру базы данных с определением моделей
 	>>> python manage.py makemigrations
+	>>> python manage.py migrate
 	
 Запускаем интерактивную консоль shell. Выполняем операцию миграции в ручную
 	>>> python manage.py shell
@@ -112,6 +117,7 @@
 Поменять язык админ панели Django.
 Редактируем файл mysite/settings
 	LANGUAGE_CODE = 'ru-RU'
+	TIME_ZONE = 'Europe/Moscow'
 
 ######################################################
 ########## Шаблоны, маршрутизация в Django ###########
@@ -340,3 +346,48 @@
 
 Шаблоны админ панели django находятся по следующему пути
 C:\Users\admin\Documents\Programming\python\venv\Lib\site-packages\django\contrib\admin\templates\admin
+
+
+##############################################
+########### Типы данных Python ###########
+#############################################
+
+
+# Разбриаемся с Python. Типы данных, переменные
+
+number = 1
+print(number, type(number))
+# >>> 1 <class 'int'>
+
+text = 'My text'
+print(text, type(text))
+# >>> My text <class 'str'>
+
+type_list = [1, 'a', 2, 'b', [1, 'a', 2, 'b'], (1, 'a', 2, 'b')]
+print(type_list, type(type_list))
+# >>> [1, 'a', 2, 'b'] <class 'list'>
+
+corteg=(1, 'a', 2, 'b')
+print(corteg, type(corteg))
+# >>> (1, 'a', 2, 'b') <class 'tuple'>
+
+dictionary = {
+    '1': 1,
+    2 : 2,
+    'Три' : 'Три'
+}
+print(dictionary, type(dictionary))
+
+class MyClass():
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+people = MyClass('Pol','11')
+print(MyClass, type(MyClass))
+print(people, type(people))
+# >>> <class 'appProductItem.views.MyClass'> <class 'type'>
+# >>> <appProductItem.views.MyClass object at 0x00000172EE585D20> <class 'appProductItem.views.MyClass'>
+
+product_list = ProductItem.objects.all()
+print(product_list, type(product_list))
+# >>> <QuerySet [<ProductItem: Сумка черная большая>]> <class 'django.db.models.query.QuerySet'>
