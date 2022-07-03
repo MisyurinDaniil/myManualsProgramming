@@ -1,4 +1,46 @@
-﻿Создаст виртуальное окружение для текущей установленной версии python в директории venv	
+﻿##########################################################
+############## Настройка Django project на Linux###############
+##########################################################
+
+Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
+	>>> sudo apt install software-properties-common -y
+	>>> sudo add-apt-repository ppa:deadsnakes/ppa
+	>>> sudo apt install python3.10
+	>>> python3.10 --versions
+
+Установка pip
+	>>> apt install -y python3-pip
+Установка venv
+	>>> apt install -y python3-venv
+Или
+	>>> sudo apt install python3.9-venv
+
+Создание виртуальной среды
+Вы можете создать новую среду с помощью команды pyvenv. 
+Мы назовем нашу новую среду my_env, но вы можете выбрать любое желаемое название.
+	>>> python3.6 -m venv my_env
+
+Активизация виртуальной среды
+Активируйте среду с помощью следующей команды. где my_env — имя вашей среды программирования.
+	>>> source my_env/bin/activate
+
+Выключить виртуальную среду
+	>>> deactivate
+
+Выгрузить все пакеты (зависимости проекта) в файл
+	>>> source venv/bin/activate
+	>>> pip freeze > requirements.txt
+
+Установить все пакеты из requirements.txt
+	>>> source venv/bin/activate
+	>>> pip install -r requirements.txt
+
+
+##########################################################
+############## Настройка Django project на Windows###############
+##########################################################
+
+Создаст виртуальное окружение для текущей установленной версии python в директории venv	
 	>>> python -m venv venv
 
 Создаем виртуальную среду для определенной версии python
@@ -24,6 +66,7 @@
 	
 Создаем приложение с именем crm
 	>>> python manage.py startapp crm
+
 
 ######################################
 ########## Модель в Django ###############
@@ -391,3 +434,15 @@ print(people, type(people))
 product_list = ProductItem.objects.all()
 print(product_list, type(product_list))
 # >>> <QuerySet [<ProductItem: Сумка черная большая>]> <class 'django.db.models.query.QuerySet'>
+
+
+
+
+##############################################
+########### Queryset ###########
+#############################################
+
+Queryset - список объектов модели
+
+related_name = 'name' - имя отношения для связываемого объекта 
+	(указывает имя обратного отношения от модели User к вашей модели.)
