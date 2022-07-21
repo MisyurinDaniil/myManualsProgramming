@@ -18,7 +18,7 @@ Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
 Создание виртуальной среды
 Вы можете создать новую среду с помощью команды pyvenv. 
 Мы назовем нашу новую среду my_env, но вы можете выбрать любое желаемое название.
-	>>> python3.6 -m venv my_env
+	>>> python3.10 -m venv my_env
 
 Активизация виртуальной среды
 Активируйте среду с помощью следующей команды. где my_env — имя вашей среды программирования.
@@ -390,6 +390,8 @@ Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
 Шаблоны админ панели django находятся по следующему пути
 C:\Users\admin\Documents\Programming\python\venv\Lib\site-packages\django\contrib\admin\templates\admin
 
+Для кастомизации копируем шаблон из директории выше в свою папку с шаблонами 
+в директорию admin (/templates/admin/), предварительно создать 
 
 ##############################################
 ########### Типы данных Python ###########
@@ -446,3 +448,411 @@ Queryset - список объектов модели
 
 related_name = 'name' - имя отношения для связываемого объекта 
 	(указывает имя обратного отношения от модели User к вашей модели.)
+
+
+
+##############################################
+########### Отправка данных в telegramm bot ###########
+#############################################
+
+Done! Congratulations on your new bot. You will find it at t.me/QualitasLeather_SuperBot. 
+You can now add a description, about section and profile picture for your bot, see /help for a list of commands. 
+By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. 
+Just make sure the bot is fully operational before you do this.
+
+Use this token to access the HTTP API:
+5453569746:AAGgsfdgLfnFRT12341234B35O16111Y
+Keep your token secure and store it safely, it can be used by anyone to control your bot.
+
+For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+
+
+Все запросы к Telegram Bot API должны осуществляться через HTTPS в следующем виде: https://api.telegram.org/bot<token>/НАЗВАНИЕ_МЕТОДА. 
+Например: https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
+
+
+Мой бот:
+https://api.telegram.org/bot5453569746:AAGf4ZVLfnFasdfsadfsadfasdfXNaeEB3511161Y/sendMessage?chat_id=-6411137811&text=текстCообщения
+5453512346:AAGf4ZVLfnFRTeXW7asdfasdfaeEB35O161Y - API ключ моего бота
+sendMessage - метод для отправки сообщейний
+chat_id - id чата в которой уйдут сообщения
+text - текст сообщения
+
+
+# Перед использование request, необходимо установить библиотекуц request
+
+import requests
+
+token = '5453569746:AAGf4ZVsdfgsdfgx4XNaeEB35O161Y'
+chat_id = '-646121232111311'
+text = 'Test'
+
+def sendTelegram():
+    api = 'https://api.telegram.org/bot'
+    method = api + token + '/sendMessage'
+
+    req = requests.post(method, data={
+        'chat_id': chat_id,
+        'text' : text,
+    })
+
+sendTelegram()
+
+
+##############################################
+########### Вывод данных из БД со связью ManyToMany в шаблон ###########
+#############################################
+
+(04:00)
+https://www.youtube.com/watch?v=NxBlcfJQSNk&list=PLF-NY6ldwAWrb6nQcPL21XX_-AmivFAYq&index=10
+
+
+
+##############################################
+########### Разворачиваем приложение на боевом сервере Debian 11 ###########
+#############################################
+
+
+####### Скрипт V 1.0 настройки сервера от https://github.com/rikamalov/django-clean-template  #########
+
+ #!/bin/bash
+base_python_interpreter=""
+project_domain=""
+project_ip=""
+project_workers=""
+project_path=`pwd`
+user_linux=`echo $USER`
+echo Ваш текущий путь к Python:
+which python3
+
+read -p "Укажите путь к Python: " base_python_interpreter
+read -p "Ваше доменное имя, без http (for example, google.com): " project_domain
+read -p "Укажите количество workers, это цифра равна количество ядер умноженные на 2 + 1 (прим: 1 ядро - 3 workers): " project_workers
+`$base_python_interpreter -m venv env`
+source env/bin/activate
+pip install -U pip
+pip install django
+pip install gunicorn
+django-admin startproject config
+mv config djangowebsite
+sudo sed -i "s~dbms_template_path~$project_path~g" gunicorn_config.py
+sudo sed -i "s~dbms_template_user~$user_linux~g" gunicorn_config.py
+sudo sed -i "s~dbms_template_workers~$project_workers~g" gunicorn_config.py
+
+sudo sed -i "s~dbms_template_path~$project_path~g" default
+sudo sed -i "s~dbms_template_web_address~$project_domain~g" default
+
+sudo sed -i "s~dbms_template_path~$project_path~g" bin/start_gunicorn.sh
+sudo chmod +x bin/start_gunicorn.sh
+sudo sed -i "s~dbms_template_path~$project_path~g" djangowebsite.conf
+sudo sed -i "s~dbms_template_user~$user_linux~g" djangowebsite.conf
+
+sudo cp -f default /etc/nginx/sites-enabled
+sudo cp -f gunicorn_config.py $project_path/djangowebsite
+sudo cp -f djangowebsite.conf /etc/supervisor/conf.d
+sudo service nginx restart
+sudo service supervisor start
+sudo rm -r .git/
+
+####### Скрипт start_gunicorn.sh старта gunicorn  от https://github.com/rikamalov/django-clean-template #########
+
+	#!/bin/bash
+	source dbms_template_path/env/bin/activate
+	exec gunicorn -c "dbms_template_path/djangowebsite/gunicorn_config.py" config.wsgi
+
+####### Файл gunicorn_config.py от https://github.com/rikamalov/django-clean-template #########
+
+	command = 'dbms_template_path/env/bin/gunicorn'
+	pythonpath = 'dbms_template_path/djangowebsite/'
+	bind = '127.0.0.1:8001'
+	workers = dbms_template_workers
+	user = 'dbms_template_user'
+	limit_request_fields = 32000
+	limit_request_fields_size = 0
+	rav_env = 'DJANGO_SETTINGS_MODULE=config.settings'
+
+####### Файл djangowebsite.conf для supervisor от https://github.com/rikamalov/django-clean-template #########
+
+	[program:gunicorn]
+	command=dbms_template_path/bin/start_gunicorn.sh
+	user=dbms_template_user
+	process_name=%(program_name)s
+	numproc=1
+	autostart=1
+	autorestart=1
+	redirect_stderr=true
+
+####### Файл default дефолтных настроект Nginx от https://github.com/rikamalov/django-clean-template #########
+
+	server {
+
+	        server_name dbms_template_web_address;
+
+	        location /.well-known {
+	        root /var/www/html;
+	        }
+
+	        location = /favicon.ico {
+	            alias dbms_template_path/djangowebsite/static/favicon.ico;
+	        }
+	        location /static/ {
+	            root dbms_template_path/djangowebsite;
+	        }
+	        location /media/ {
+	            root dbms_template_path/djangowebsite;
+	        }
+	        location / {
+	            proxy_pass http://127.0.0.1:8001;
+	            proxy_set_header X-Forwarded-Host $server_name;
+	            proxy_set_header X-Real-IP $remote_addr;
+	            add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+	            add_header Access-Control-Allow-Origin *;
+	        }
+	}
+
+
+
+
+##################################################################################################################
+########### Расписана работа скрипта выше по шагам для развертывания боевого сервера ###########
+#################################################################################################################
+
+0. Установка python 3.10.5
+
+Требование к установке Python 3.10 на Debian 10 и 11
+	sudo apt update && sudo apt upgrade 
+
+	sudo apt install wget build-essential libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+
+Скачать Python – Вы также можете загрузить исходный архив Python 3.10 с его официального сайта.
+	wget https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tgz
+
+Распаковать архив – после загрузки распакуйте архивный файл в вашей системе, делается это командой.
+	tar xzf Python-3.10.5.tgz
+
+Компиляция исходного кода Python – перейдите в извлеченный каталог с помощью команды cd, 
+затем подготовьте исходный код Python для компиляции в вашей системе.
+	cd Python-3.10.5
+    ./configure --enable-optimizations
+
+Установка Python 3.10 – И наконец, выполните следующую команду, чтобы завершить установку Python в системе Debian. 
+Компилятор altinstall не позволяет переопределять версии Python по умолчанию.
+	make altinstall
+
+Чтобы проверить версию Python, выполните:
+	python3.10 -V
+
+Обновляем pip
+	pip3.10 install --upgrade pip
+
+Это команда проверит pip для Python 3.10.
+    pip3.10 -V 
+
+1. Устанавливаем необходимые пакеты
+	apt-get install htop git curl nginx supervisor
+
+	apt-get install  python3-pip python3-dev python3-venv
+
+	Установка python из исходников нужной версии описана выше
+
+2. cd /home/qualitas
+	mkdir website
+	cd website
+	/usr/local/bin/python3.10 -m venv venv
+	source venv/bin/activate
+	pip install -U pip
+	pip install django
+	pip install gunicorn
+	django-admin startproject config
+	mv config qualitas_store
+
+
+3. Подготавливаем файл gunicorn_config.py 
+
+	# команда на запуск gunicorn из виртуального окружения
+	command = '/home/qualitas/website/venv/bin/gunicorn'
+	# путь к python проекту
+	pythonpath = '/home/qualitas/website/qualitas_store/'
+	# порт на котором запускать gunicorn
+	bind = '127.0.0.1:8001'
+	# количество workers, это цифра равна количество ядер умноженные на 2 + 1 (прим: 1 ядро - 3 workers)
+	workers = 3
+	# Имя пользователя у кого права на файлы проекта
+	user = 'qualitas'
+	limit_request_fields = 32000
+	limit_request_fields_size = 0
+	# Путь до файла настроект DJANGO (подключаем файл настроек как в python from config.setting import что-то),
+	# файл настроек settings.py у нас лежит в директории config проекта
+	rav_env = 'DJANGO_SETTINGS_MODULE=config.settings'
+
+
+4. В дирректории проекта в которой лежат папки qualitas_store и venv создаем дирректорию bin 
+и помещаем в нее файл start_gunicorn.sh
+	mkdir bin
+	vi bin/start_gunicorn.sh
+
+5. Подготавливаем файл cкрипта запуска start_gunicorn.sh
+
+	#!/bin/bash
+	source /home/qualitas/website/venv/bin/activate
+	exec gunicorn -c "/home/qualitas/website/qualitas_store/gunicorn_config.py" config.wsgi
+	#(config.wsgi - "config" название проекта, задается при создании командой django-admin startproject config)
+	# Путь до файла wsgi.py (подключаем файл как в python from config.setting import что-то),
+	# файл настроек wsgi.py у нас лежит в директории config проекта
+
+
+6. Подготавливаем файл default для Nginx
+
+	server {
+			listen 80;
+
+			# Указываем ДНС имя сервера
+	        server_name qualitas.store;
+
+	        location /.well-known {
+	        	root /var/www/html;
+	        }
+	        # Указываем путь до favico
+	        location = /favicon.ico {
+	            alias /home/qualitas/website/qualitas_store/static/img/favico/favicon.ico;
+	        }
+			# Указываем путь до static
+	        location /static/ {
+	            root /home/qualitas/website/qualitas_store;
+	        }
+	        # Указываем путь до media
+	        location /media/ {
+	            root /home/qualitas/website/qualitas_store;
+	        }
+
+	        location / {
+	            proxy_pass http://127.0.0.1:8001;
+	            proxy_set_header X-Forwarded-Host $server_name;
+	            proxy_set_header X-Real-IP $remote_addr;
+	            add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+	            add_header Access-Control-Allow-Origin *;
+	        }
+	}
+
+
+
+7. Подготавливаем supervisor - файл djangowebsite.conf
+
+	# supervisor стартует все проекты находящиес в папке /etc/supervisor/conf.d
+	[program:gunicorn]
+	# Задаем путь до скрипта запуска gunicorn
+	command=/home/qualitas/website/bin/start_gunicorn.sh
+	# Задаем пользователя под которым будет все работать
+	user=qualitas
+	process_name=%(program_name)s
+	numproc=1
+	autostart=1
+	autorestart=1
+	redirect_stderr=true
+
+
+8. Копируем подготовленные файлы в соответствующие директории
+
+	sudo cp default /etc/nginx/sites-enabled
+	sudo cp gunicorn_config.py /home/qualitas/website/qualitas_store
+	sudo cp djangowebsite.conf /etc/supervisor/conf.d
+	sudo service nginx restart
+	sudo service supervisor restart
+
+9. Подготавлимваем проект для загрузки на сервер
+	- меняем нзвание проекта на config, для этого в файлах settings.py, asgi.py, wsgi.py, manage.py
+	- меняем название папки в которой лежат вышеуказанные файлы на "config"
+	- меняем настройеи settings.py
+		# Зададим путь для Dev (debug) версии на локальной машине
+		#BASE_DIR = Path(__file__).resolve().parent.parent
+		# Зададим путь для deploy версии
+		BASE_DIR =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+		# Пропишем IP для deploy версии - localhost и IP сервера
+		ALLOWED_HOSTS = ['127.0.0.1', '194.87.93.249']
+
+		TEMPLATES = [
+    		{	
+		        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+
+		DATABASES = {
+		    'default': {
+		        'ENGINE': 'django.db.backends.sqlite3',
+		        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+		    }
+		}
+
+		STATICFILES_DIRS = [
+		    os.path.join(BASE_DIR, "config/static/"),
+		]
+
+		# на основании https://en.wikipedia.org/wiki/List_of_tz_database_time_zones задаем timezone 
+		TIME_ZONE = 'Europe/Moscow'
+
+	- меняем настройеи urls.py
+		from .settings import DEBUG
+
+		urlpatterns = [
+		    path('', index_page),
+		    path('category/<int:idProductCategory>/', category_page),
+		    path('product/<int:idProductItem>/', product_page),
+		    path('contacts/', contacts_page),
+		    path('makeorder/', makeorder),
+		    path('admin/', admin.site.urls),
+		] 
+		# Если включен DEBUG, т.е. локальная версия для статики добавляется конструкция
+		if DEBUG: 
+		    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+9. Подготавлимваем перечень используемых пакетов. Выгрузить все пакеты (зависимости проекта) в файл
+	source venv/bin/activate
+	pip freeze > requirements.txt
+
+10. Для хранения ключей доступа приложений используется переменные окружения, 
+которые хранятся в файлайх типа .env. Для доступа к этим переменным используется библиотека python-dotenv.
+Установим ее.
+	pip install python-dotenv
+
+Редактируем файл settings.py
+	# Подключем библиотеку dotenv, конкретно функцию load_dotenv
+	from dotenv import load_dotenv
+	# Вызываем функция load_dotenv и задем приоритет переменным окржения максимальный (перезапись)
+	load_dotenv(override=True)
+	# Импортируем переменную окружения
+	SECRET_KEY = os.environ.get('secret')
+
+Не забываем добавлять в .gitignore файлы .env
+
+
+11. Заливаем с заменой все директории
+
+12. Активируем виртуальное окружение и устанавливаем зависимости
+	Установить все пакеты из requirements.txt
+		source venv/bin/activate
+		pip install -r requirements.txt
+
+13. Редактируем файл settings.py
+	DEBUG = False
+
+14. Выполним команду для сбора файлов в одну директорию для боевого сервера
+	python manage.py collectstatic
+
+15. Настроим SSL (HTTPS)
+	https://letsencrypt.org/ru/getting-started/
+	https://certbot.eff.org/ (Ввберем Nginx и Debian 11, нажмем кнопку Install snapd)
+	Установим Install snapd 
+		$ sudo apt update
+		$ sudo apt install snapd
+		$ sudo snap install core
+			core 16-2.45.2 from Canonical✓ installed
+	Устанавливаем certbot
+		$ sudo snap install --classic certbot
+		$ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+	Устанавливаем SSL сертификат
+		$ sudo certbot --nginx
+
+
+
+16. Редактируем файл settings.py. Без нее не работает авторизация в админ панеле (ругается на csrf атаку)
+	CSRF_TRUSTED_ORIGINS=['https://*.YOUR_DOMAIN.COM']
