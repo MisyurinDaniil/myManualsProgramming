@@ -37,7 +37,7 @@ Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
 
 
 ##########################################################
-############## Настройка Django project на Windows###############
+############## Настройка Django project на Windows ###############
 ##########################################################
 
 Создаст виртуальное окружение для текущей установленной версии python в директории venv	
@@ -94,6 +94,7 @@ Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
 		class Meta:
 			verbose_name = "Заказ"
 			verbose_name_plural = "Заказы"
+			
 	В файле mysite/settings.py подключим приложение
 		INSTALLED_APPS = [
 		'crm.apps.CrmConfig',
@@ -109,7 +110,10 @@ Install Python 3.10 on Ubuntu 20.04|18.04 using Apt Repo
 Миграция синхронизует структуру базы данных с определением моделей
 	>>> python manage.py makemigrations
 	>>> python manage.py migrate
-	
+
+Посмотреть как выглядит SQL запрос при миграциии 
+	>>> python manege.py sqlmigration 'модель' 'порядковый номер миграции - 0001'
+
 Запускаем интерактивную консоль shell. Выполняем операцию миграции в ручную
 	>>> python manage.py shell
 	
